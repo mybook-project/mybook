@@ -19,6 +19,18 @@ public class Book {
     @OneToMany(cascade=CascadeType.ALL , mappedBy = "book")
     private List<Comment> comments;
 
+    public Book() {
+    }
+
+    public Book(String title, String author, String publisher, int pages, String genre, String description) {
+        this.title = title;
+        this.author = author;
+        this.publisher = publisher;
+        this.pages = pages;
+        this.genre = genre;
+        this.description = description;
+    }
+
     public List<Comment> getComments() {
         return comments;
     }
