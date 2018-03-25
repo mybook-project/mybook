@@ -4,10 +4,9 @@ import com.team.mybook.data.entity.Book;
 import com.team.mybook.data.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(path="/api/book")
@@ -26,13 +25,24 @@ public class BookController {
     }
 
     @GetMapping(path="/all")
-    public @ResponseBody Iterable<Book> getAllBooks() {
+    public @ResponseBody Iterable<Book> getAllBooks(HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
         return bookRepository.findAll();
     }
 
-    @GetMapping(path="/delete")
-    public @ResponseBody String deleteBook(@RequestParam long id) {
-        bookRepository.deleteById(id);
-        return "deleted";
+//    @GetMapping(path="/delete")
+//    public @ResponseBody String deleteBook(@RequestParam long id) {
+//        bookRepository.deleteById(id);
+//        return "deleted";
+//    }
+
+    @DeleteMapping("/delete/{bookID}")
+    public String deleteMethod(@PathVariable long bookID) {
+        try {
+            bookRepository.deleteById(bookID);
+        } catch (Exception e) {
+            return "Error";
+        }
+        return "Done";
     }
 }
