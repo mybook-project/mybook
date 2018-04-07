@@ -18,6 +18,17 @@ public class User {
     @OneToMany(cascade=CascadeType.ALL , mappedBy = "user")
     private List<Statistic> statistics;
 
+    public User() {
+    }
+
+    public User(String name, String password, String email, String gender, int age) {
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.gender = gender;
+        this.age = age;
+    }
+
     public List<Statistic> getStatistics() {
         return statistics;
     }

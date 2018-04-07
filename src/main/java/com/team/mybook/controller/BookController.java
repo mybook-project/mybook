@@ -3,25 +3,37 @@ package com.team.mybook.controller;
 import com.team.mybook.data.entity.Book;
 import com.team.mybook.data.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
-@Controller
+@RestController
 @RequestMapping(path="/api/book")
 public class BookController {
 
     @Autowired
     private BookRepository bookRepository;
 
-    @GetMapping(path="/add")
-    public @ResponseBody String addNewBook (@RequestParam String title, @RequestParam String author,
-                                            @RequestParam String publisher, @RequestParam int pages,
-                                            @RequestParam String genre , @RequestParam String description){
-        Book book = new Book(title,author,publisher,pages,genre,description);
+    @PostMapping("/add")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addNewBook (@RequestBody Book requestBook){
+        Book book = new Book(requestBook.getTitle(), requestBook.getAuthor(), requestBook.getPublisher(),
+                            requestBook.getPages(), requestBook.getGenre(), requestBook.getDescription());
         bookRepository.save(book);
-        return "Saved";
+    }
+
+    @GetMapping(path="/{bookTitle}")
+    public @ResponseBody Book getBookByTitle(HttpServletResponse response, @PathVariable String bookTitle) {
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+        return bookRepository.findByTitle(bookTitle);
+    }
+
+    @GetMapping(path="/id/{bookID}")
+    public @ResponseBody Book getBookById(HttpServletResponse response, @PathVariable long bookID) {
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+        return bookRepository.findById(bookID).get();
     }
 
     @GetMapping(path="/all")
@@ -30,19 +42,9 @@ public class BookController {
         return bookRepository.findAll();
     }
 
-//    @GetMapping(path="/delete")
-//    public @ResponseBody String deleteBook(@RequestParam long id) {
-//        bookRepository.deleteById(id);
-//        return "deleted";
-//    }
-
     @DeleteMapping("/delete/{bookID}")
-    public String deleteMethod(@PathVariable long bookID) {
-        try {
-            bookRepository.deleteById(bookID);
-        } catch (Exception e) {
-            return "Error";
-        }
-        return "Done";
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteBook(@PathVariable long bookID) {
+        bookRepository.deleteById(bookID);
     }
 }
