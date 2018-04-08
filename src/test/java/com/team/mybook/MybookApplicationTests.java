@@ -1,16 +1,14 @@
 package com.team.mybook;
 
-import org.junit.Test;
+import com.team.mybook.controller.BookControllerTest;
+import com.team.mybook.controller.UserControllerTest;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.runners.Suite;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+		BookControllerTest.class,
+		UserControllerTest.class
+})
 public class MybookApplicationTests {
-
-	@Test
-	public void contextLoads() {
-	}
-
 }
