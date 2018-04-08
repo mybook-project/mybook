@@ -25,15 +25,9 @@ public class UserController {
     }
 
     @GetMapping(path="/{userName}")
-    public @ResponseBody User getUserByName(HttpServletResponse response, @PathVariable String userName) {
+    public @ResponseBody User getUser(HttpServletResponse response, @PathVariable String userName) {
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
         return userRepository.findByName(userName);
-    }
-
-    @GetMapping(path="/id/{userID}")
-    public @ResponseBody User getUserById(HttpServletResponse response, @PathVariable long userID) {
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
-        return userRepository.findById(userID).get();
     }
 
     @GetMapping(path="/all")
@@ -42,9 +36,8 @@ public class UserController {
         return userRepository.findAll();
     }
 
-    @DeleteMapping("/delete/{userID}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteUser(@PathVariable long userID) {
-        userRepository.deleteById(userID);
+    @DeleteMapping("/delete/{userName}")
+    public void deleteUser(@PathVariable String userName) {
+        userRepository.deleteUserByName(userName);
     }
 }
