@@ -1,5 +1,7 @@
 package com.team.mybook.controller;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.team.mybook.data.entity.Statistic;
 import com.team.mybook.data.entity.User;
 import com.team.mybook.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path="/api/user")
@@ -16,8 +19,8 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/add")
-    @ResponseStatus(HttpStatus.CREATED)
     public void addNewUser (@RequestBody User requestUser){
         User user = new User(requestUser.getName(), requestUser.getPassword(), requestUser.getEmail(),
                                 requestUser.getGender(), requestUser.getAge());
@@ -39,5 +42,19 @@ public class UserController {
     @DeleteMapping("/delete/{userName}")
     public void deleteUser(@PathVariable String userName) {
         userRepository.deleteUserByName(userName);
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PutMapping("/update")
+    public void updateUser (@RequestBody User requestUser){
+        User user = userRepository.findUserByUserID(requestUser.getUserID());
+
+        user.setName(requestUser.getName());
+        user.setPassword(requestUser.getPassword());
+        user.setAge(requestUser.getAge());
+        user.setEmail(requestUser.getEmail());
+        user.setGender(requestUser.getGender());
+
+        userRepository.save(user);
     }
 }

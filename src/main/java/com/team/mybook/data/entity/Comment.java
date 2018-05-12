@@ -1,5 +1,8 @@
 package com.team.mybook.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 
 @Entity
@@ -13,10 +16,21 @@ public class Comment {
     @JoinColumn(name="bookID")
     private Book book;
 
+    public Comment() {
+
+    }
+
+    public Comment(String content, Book book) {
+        this.content = content;
+        this.book = book;
+    }
+
+    @JsonIgnore
     public Book getBook() {
         return book;
     }
 
+    @JsonProperty
     public void setBook(Book book) {
         this.book = book;
     }

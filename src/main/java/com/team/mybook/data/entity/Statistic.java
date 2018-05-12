@@ -1,8 +1,12 @@
 package com.team.mybook.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 
 @Entity
+//@JsonIgnoreProperties({"user"})
 public class Statistic {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -22,10 +26,25 @@ public class Statistic {
     @JoinColumn(name="bookID")
     private Book book;
 
+    public Statistic() {
+    }
+
+    public Statistic(String status, int score, String type, int time, int currentPage, User user, Book book) {
+        this.status = status;
+        this.score = score;
+        this.type = type;
+        this.time = time;
+        this.currentPage = currentPage;
+        this.user = user;
+        this.book = book;
+    }
+
+    @JsonIgnore
     public User getUser() {
         return user;
     }
 
+    @JsonProperty
     public void setUser(User user) {
         this.user = user;
     }
